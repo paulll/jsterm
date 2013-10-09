@@ -45,7 +45,7 @@ Redirected element is always last in arguments list
     paulll@cloudx /user/desktop # pwd || echo you're at directory
     you're at directory /user/desktop
     
-FS is not finished yet, so you can not redirect output to files. Words ">>", ">" and "&" are reserved
+FS is not finished yet, so you can not redirect output to files. Words <b>>></b>, <b>></b> and <b>&</b> are reserved
 
 ## Terminal API's
 
@@ -64,28 +64,28 @@ and manifest[%commandname%] with structure below
 Use API's listed below to write your own console app for jsterm
 
 - util.console 
-..- print (text, color, background, bold) - prints new line
-..- write (text, color, background, bold) - writes text to last line
-..- clear - clear terminal
-..- read (prompt, key, callback) - read user input; key must be string; Support for ctrl-keys and enter ex. "CTRL+ENTER", "ENTER", "Q", "CTRL+Q";
-..- clearline (line) - clear line
-..- insertLine (line, text, color, background, bold) - insert line
+  - <b>print</b> (text, color, background, bold) - prints new line
+  - <b>write</b> (text, color, background, bold) - writes text to last line
+  - <b>clear</b> - clear terminal
+  - <b>read</b> (prompt, key, callback) - read user input; on %key% press input stops; example: <i>CTRL+ENTER</i>, <i>ENTER</i>, <i>Q</i>;
+  - <b>clearline</b> (line) - clear line
+  - <b>insertLine</b> (line, text, color, background, bold) - insert line
 - util.cursor
-..- setPos (posX) - set X pos 
-..- getPos (mode) - get cursor pos; mode can be 'line' or 'char' or undefined; if mode is undefined it returns object {line, char} 
-..- hide () - hide cursor
-..- show () - show cursor
+  - <b>setPos</b> (posX) - set X pos 
+  - <b>getPos</b> (mode) - get cursor pos; mode can be 'line' or 'char' or undefined; if mode is undefined it returns object {line, char} 
+  - <b>hide</b> () - hide cursor
+  - <b>show</b> () - show cursor
 - util.theme
-..- promptStyle - config. 1 means, that prompt is in cloudx style, 2 - ubuntu, 3 - fedora;
-..- color - colors. Please use this variables in your jsterm apps;
-....- background - default: #242424 (dark gray)
-....- error - default: #C75646 (light red)
-....- info - default: #49D0FF (light blue)
-....- prompt - default: #8EB33B (green)
-....- text - default: #F7F7F7 (white/gray)
-....- textBackground - default: transparent
+  - <b>promptStyle</b> - config. 1 means, that prompt is in cloudx style, 2 - ubuntu, 3 - fedora;
+  - color - colors. Please use this variables in your jsterm apps;
+    - <b>color.background</b> - default: #242424 (dark gray)
+    - <b>color.error</b> - default: #C75646 (light red) 
+    - <b>color.info</b> - default: #49D0FF (light blue)
+    - <b>color.prompt</b> - default: #8EB33B (green)
+    - <b>color.text</b> - default: #F7F7F7 (white/gray)
+    - <b>color.warning</b> - default: #FFB259 (orange)
+    - <b>color.textBackground</b> - default: transparent
 - util.tdata
-..- pwd - default: "/user/desktop" - working directory
-..- system - default: "cloudx-3.3" - system
-..- user - default: "paulll" - user name
-....- warning
+  - <b>pwd</b> - default: "/user/desktop" - working directory
+  - <b>system</b> - default: "cloudx-3.3" - system
+  - <b>user</b> - default: "paulll" - user name
