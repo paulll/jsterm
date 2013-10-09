@@ -1,0 +1,27 @@
+html, body {
+	margin: 0;
+	overflow: hidden;
+	min-width: 100%;
+	min-height: 100%;
+	font-family: 'Ubuntu Mono', monospace;
+}
+#cursor {
+	position: absolute;
+	margin-top: 5px;
+	margin-left: 5px;
+	z-index: 9999;
+	-webkit-touch-callout: none;
+	  -webkit-user-select: none;
+	   -khtml-user-select: none;
+	     -moz-user-select: none;
+          -ms-user-select: none;
+              user-select: none;
+}
+#terminal {
+	position: fixed;
+	top: 5px;
+	left: 5px;
+	bottom: 5px;
+	right: -15px;
+	overflow: auto;
+}

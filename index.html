@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>Jsterm by paulll</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Jsterm</h1>
+        <h2>Terminal emulator in browser!</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/paulll/jsterm/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/paulll/jsterm/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/paulll/jsterm" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a name="jsterm" class="anchor" href="#jsterm"><span class="octicon octicon-link"></span></a>jsterm</h1>
+
+<p>Terminal emulator in browser!</p>
+
+<p>Supported variables, output redirecting, colored output, themes, prompt-styles, etc..</p>
+
+<p>Example:</p>
+
+<pre><code>paulll@cloudx /user/desktop # var username paulll
+paulll@cloudx /user/desktop # pwd || echo hi, %username% at directory
+hi, paulll at directory /user/desktop
+paulll@cloudx /user/desktop # 
+</code></pre>
+
+<p>To add a command, create file in /rom/ and name is with command's name and .js extension</p>
+
+<h2>
+<a name="syntax" class="anchor" href="#syntax"><span class="octicon octicon-link"></span></a>Syntax</h2>
+
+<p>First word is command, other are arguments</p>
+
+<pre><code>paulll@cloudx /user/desktop # echo something
+</code></pre>
+
+<p>Arguments separated by space, you can escape space and other lexemes with backslash or quotes</p>
+
+<pre><code>paulll@cloudx /user/desktop # cd "/user/dir with spaces"
+/user/dir with spaces
+paulll@cloudx /user/dir with spaces # 
+</code></pre>
+
+<p>Command "var" sets value of variable.
+Write variable name in percent symbols to get it's value</p>
+
+<pre><code>paulll@cloudx /user/desktop # var username paulll
+paulll
+paulll@cloudx /user/desktop # echo hi, %username%
+hi, paulll
+</code></pre>
+
+<p>You can redirect output from one command to another with "||" lexeme</p>
+
+<pre><code>paulll@cloudx /user/desktop # echo /var/www || cd
+/var/www
+paulll@cloudx /var/www #
+</code></pre>
+
+<p>Redirected element is always last in arguments list</p>
+
+<pre><code>paulll@cloudx /user/desktop # pwd || echo you're at directory
+you're at directory /user/desktop
+</code></pre>
+
+<p>FS is not finished yet, so you can not redirect output to files. Words <b>&gt;&gt;</b>, <b>&gt;</b> and <b>&amp;</b> are reserved</p>
+
+<h2>
+<a name="terminal-apis" class="anchor" href="#terminal-apis"><span class="octicon octicon-link"></span></a>Terminal API's</h2>
+
+<p>To register app in the terminal you have to set app[%commandname%] property with main app function
+and manifest[%commandname%] with structure below</p>
+
+<pre><code>{
+    "async" : false, // start input on main function's return
+    "help" : {
+        "en-US" : "Short command description",
+        // here you can add more languages 
+    },
+    "usage" : "somecommand (-flags) &lt;important value&gt; [not important]"
+}
+</code></pre>
+
+<p>Use API's listed below to write your own console app for jsterm</p>
+
+<ul>
+<li>util.console 
+
+<ul>
+<li>
+<b>print</b> (text, color, background, bold) - prints new line</li>
+<li>
+<b>write</b> (text, color, background, bold) - writes text to last line</li>
+<li>
+<b>clear</b> - clear terminal</li>
+<li>
+<b>read</b> (prompt, key, callback) - read user input; on %key% press input stops; example: <i>CTRL+ENTER</i>, <i>ENTER</i>, <i>Q</i>;</li>
+<li>
+<b>clearline</b> (line) - clear line</li>
+<li>
+<b>insertLine</b> (line, text, color, background, bold) - insert line</li>
+</ul>
+</li>
+<li>util.cursor
+
+<ul>
+<li>
+<b>setPos</b> (posX) - set X pos </li>
+<li>
+<b>getPos</b> (mode) - get cursor pos; mode can be 'line' or 'char' or undefined; if mode is undefined it returns object {line, char} </li>
+<li>
+<b>hide</b> () - hide cursor</li>
+<li>
+<b>show</b> () - show cursor</li>
+</ul>
+</li>
+<li>util.theme
+
+<ul>
+<li>
+<b>promptStyle</b> - config. 1 means, that prompt is in cloudx style, 2 - ubuntu, 3 - fedora;</li>
+<li>color - colors. Please use this variables in your jsterm apps;</li>
+<li>
+<b>color.background</b> - default: #242424 (dark gray)</li>
+<li>
+<b>color.error</b> - default: #C75646 (light red) </li>
+<li>
+<b>color.info</b> - default: #49D0FF (light blue)</li>
+<li>
+<b>color.prompt</b> - default: #8EB33B (green)</li>
+<li>
+<b>color.text</b> - default: #F7F7F7 (white/gray)</li>
+<li>
+<b>color.warning</b> - default: #FFB259 (orange)</li>
+<li>
+<b>color.textBackground</b> - default: transparent</li>
+</ul>
+</li>
+<li>util.tdata
+
+<ul>
+<li>
+<b>pwd</b> - default: "/user/desktop" - working directory</li>
+<li>
+<b>system</b> - default: "cloudx-3.3" - system</li>
+<li>
+<b>user</b> - default: "paulll" - user name</li>
+</ul>
+</li>
+</ul>
+<a name="demo" class="anchor" href="#demo"><span class="octicon octicon-link"></span></a>Demo</h2>
+<iframe src="main.html">ooops! iframes unsupported :/ please use last Firefox or Google Chrome</iframe>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
