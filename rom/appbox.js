@@ -120,7 +120,7 @@ apps.apps = function (args, redir) {
 }
 
 apps.usage = function (args, redir) {
-	if (!args[0]) {
+	if (args[0]) {
 		if (redir) {
 			return '[error]: this command needs 1 argument';
 		} else {
