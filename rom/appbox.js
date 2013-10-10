@@ -130,8 +130,8 @@ apps.usage = function (args, redir) {
 	}
 	
 	if (redir) {
-		return manifest[args[0]].help[util.language || 'en-US'];
+		return manifest[args[0]].usage[util.language || 'en-US'];
 	} else {
-		util.console.print(manifest[args[0]].help[util.language || 'en-US']);
+		util.console.print(manifest[args[0]].usage[util.language || 'en-US']);
 	}
 }
