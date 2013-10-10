@@ -82,4 +82,56 @@ apps.var = function (args, redir) {
     return false;
 
 }
+apps.help = function (args, redir) {
+	if (!args[0]) {
+		if (redir) {
+			return manifest[args[0]].help[util.language || 'en-US'];
+		} else {
+			util.console.print(manifest[args[0]].help[util.language || 'en-US'])
+		}
+	} else {
+		
+		var help = [];
+		
+		for (var appid in manifest) {
+			help.push(appid + ' ' + manifest[appid].help[util.language || 'en-US']);
+		}
+		
+		if (redir) {
+			return help;
+		} else {
+			util.console.print(help.join('\n'));
+		}
+	}
+}
 
+apps.apps = function (args, redir) {
+	var appz = [];
+		
+	for (var appid in apps) {
+		appz.push(appid);
+	}
+	
+	if (redir) {
+		return appz;
+	} else {
+		util.console.print(appz.join('\n'));
+	}
+}
+
+apps.usage = function (args, redir) {
+	if (!args[0]) {
+		if (redir) {
+			return '[error]: this command needs 1 argument';
+		} else {
+			util.console.print('[error]: this command needs 1 argument')
+			return;
+		}
+	}
+	
+	if (redir) {
+		return manifest[args[0]].help[util.language || 'en-US'];
+	} else {
+		util.console.print(manifest[args[0]].help[util.language || 'en-US']);
+	}
+}
