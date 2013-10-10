@@ -3,10 +3,12 @@ apps.appbox = function (cmd, redir) {
 		util.console.print('appbox modules loaded!', util.theme.color.info);
 	}
 }
+
 apps.echo = function (args, redir) {
 	if (!redir){return util.console.print(args.join(' '))}
 	return args[0];
 }
+
 apps.cd = function (args, redir) {
 	
 	dir = args[0].split('/');
@@ -43,6 +45,7 @@ apps.cd = function (args, redir) {
 		return ndir;
 	}
 }
+
 apps.pwd = function (args, redir) {
 	if (!redir) {
 		util.console.print(util.tdata.pwd);
@@ -50,6 +53,7 @@ apps.pwd = function (args, redir) {
 		return util.tdata.pwd;
 	}
 }
+
 apps.var = function (args, redir) {
 	var a2 = args[2],
     a1 = args[1],
@@ -82,6 +86,7 @@ apps.var = function (args, redir) {
     return false;
 
 }
+
 apps.help = function (args, redir) {
 	if (args[0]) {
 		if (redir) {
@@ -92,15 +97,33 @@ apps.help = function (args, redir) {
 	} else {
 		
 		var help = [];
+		var largest  = 0;
 		
 		for (var appid in manifest) {
+			
+			if (appid.length > largest) {largest = appid.length}
+			
 			help.push(appid + ' ' + manifest[appid].help[util.language || 'en-US']);
 		}
 		
 		if (redir) {
 			return help;
 		} else {
-			util.console.print(help.join('\n'));
+			
+			var fhelp = [];
+		
+			help.forEach (function (line) {
+				var desc = line.split(' '), name;
+				
+				name = desc.shift();
+				desc = desc.join(' ');
+				
+				var appname = name + Array(largest - name.length + 2).join(' ');
+				
+				fhelp.push (appname + desc)
+			});
+			
+			util.console.print(fhelp.join('\n'));
 		}
 	}
 }
@@ -134,4 +157,68 @@ apps.usage = function (args, redir) {
 	} else {
 		util.console.print(manifest[args[0]].usage[util.language || 'en-US']);
 	}
+}
+
+manifest.appbox = {
+	help: {
+		"en-US": "Load main commands package: echo, cd, pwd, var, help, apps, usage"
+	},
+	async: false,
+	usage: "appbox"
+}
+
+manifest.echo = {
+	help: {
+		"en-US": "Prints line with text in arguments"
+	},
+	async: false,
+	usage: "echo <text> [text, text, ...]"
+}
+
+manifest.cd = {
+	help: {
+		"en-US": "Change working directory"
+	},
+	async: false,
+	usage: "cd <directory>"
+}
+
+manifest.var = {
+	help: {
+		"en-US": "Load main commands package: echo, cd, pwd, var, help, apps, usage"
+	},
+	async: false,
+	usage: "var name value \nOR var name=value\nOR var name = value"
+}
+
+manifest.pwd = {
+	help: {
+		"en-US": "Print working directory"
+	},
+	async: false,
+	usage: "pwd"
+}
+
+manifest.help = {
+	help: {
+		"en-US": "This command"
+	},
+	async: false,
+	usage: "help [app]"
+}
+
+manifest.apps = {
+	help: {
+		"en-US": "List all loaded apps"
+	},
+	async: false,
+	usage: "apps"
+}
+
+manifest.usage = {
+	help: {
+		"en-US": "Show usage of command"
+	},
+	async: false,
+	usage: "usage <command>"
 }

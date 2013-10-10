@@ -2,6 +2,8 @@ function $(a){return document.getElementById(a);}
 
 var util = {
 	
+	language: 'en-US',
+	
 	fs: {
 		fileGetContents: function (path) {},
 		fileSetContents: function (path) {},
