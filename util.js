@@ -2,11 +2,44 @@ function $(a){return document.getElementById(a);}
 
 var util = {
 	
+	language: 'en-US',
+	
+	
 	fs: {
 		fileGetContents: function (path) {},
 		fileSetContents: function (path) {},
 		ls: function (path) {},
-		mkdir : function (path) {}
+		mkdir : function (path) {},
+		getRealPath: function (dir) {
+			dir = dir.split('/');
+			
+			if (dir[0] === '.') {
+				dir.splice(0,1,util.tdata.pwd);
+			} else if (dir[0] !== '') {
+				dir.splice(0,0,util.tdata.pwd)
+			}
+			
+			dir = dir.join('/').split('/');
+			
+			var ndir = [];
+			
+			dir.forEach(function (v,i) {
+				if (v === '..') {
+					ndir.pop();
+				} else if (v === '.') {
+					// do nothing
+				} else if (v === '') {
+					// do nothing
+				} else {
+					ndir.push(v);
+				}
+			});
+			
+			return  '/'+ndir.join('/');
+		},
+		getFileName: function (path) {
+			return path.split('/').pop();
+		}
 	},
 
 	cursor: {
@@ -96,7 +129,7 @@ var util = {
 				}
 			}
 			
-			if (rowElement && rowElement.innerText === ' ') {
+			if (rowElement && rowElement.innerText === ' ') {
 				rowElement.innerText = '';
 			}
 			
@@ -112,7 +145,7 @@ var util = {
 					row.className = 'row';
 				$('terminal').insertBefore(row, $('reader'));
 			} else {
-				if (row.childNodes[row.childNodes.length-1].innerText === ' ') {
+				if (row.childNodes[row.childNodes.length-1].innerText === ' ') {
 					row.childNodes[row.childNodes.length-1].innerText = '';
 				}
 			}
@@ -126,8 +159,8 @@ var util = {
 			bgcolor = bgcolor || util.theme.color.textBackground;
 			
 			text = text + ''; // if number given
-			if (!text) {text = ' '} // to prevent cursor lags and create empty string
-			text = text.split(' ').join(' '); // to prevent cursor lags
+			if (!text) {text = ' '} // to prevent cursor lags and create empty string
+			text = text.split(' ').join(' '); // to prevent cursor lags
 			
 			var lines = text.split ('\n');
 			

@@ -11,38 +11,14 @@ apps.echo = function (args, redir) {
 
 apps.cd = function (args, redir) {
 	
-	dir = args[0].split('/');
+	var dir = util.fs.getRealPath (args[0]);
 	
-	if (dir[0] === '.') {
-		dir.splice(0,1,util.tdata.pwd);
-	} else if (dir[0] !== '') {
-		dir.splice(0,0,util.tdata.pwd)
-	}
-	
-	dir = dir.join('/').split('/');
-	
-	var ndir = [];
-	
-	dir.forEach(function (v,i) {
-		if (v === '..') {
-			ndir.pop();
-		} else if (v === '.') {
-			// do nothing
-		} else if (v === '') {
-			// do nothing
-		} else {
-			ndir.push(v);
-		}
-	});
-	
-	ndir = '/'+ndir.join('/');
-	
-	util.tdata.pwd = ndir;
+	util.tdata.pwd = dir;
 
 	if (!redir) {
-		util.console.print(ndir)
+		util.console.print(dir)
 	} else {
-		return ndir;
+		return dir;
 	}
 }
 
@@ -87,12 +63,50 @@ apps.var = function (args, redir) {
 
 }
 
+apps.uname = function (args, redir) {
+	util.tdata.user = args[0] || util.tdata.user;
+	
+	if (redir) {
+		return util.tdata.user;
+	}
+	
+	util.console.print(util.tdata.user);
+}
+apps.sysname = function (args, redir) {
+	util.tdata.system = args[0] || util.tdata.system;
+	
+	if (redir) {
+		return util.tdata.system;
+	}
+	
+	util.console.print(util.tdata.system);
+}
+apps.promptstyle = function (args, redir) {
+	util.theme.promptStyle = args[0] || util.theme.promptStyle;
+	
+	if (redir) {
+		return util.theme.promptStyle;
+	}
+	
+	util.console.print(util.theme.promptStyle);
+}
+
 apps.help = function (args, redir) {
 	if (args[0]) {
 		if (redir) {
-			return manifest[args[0]].help[util.language || 'en-US'];
+			return manifest[args[0]].help[util.language || 'en-US'] || 'Help not found';
 		} else {
-			util.console.print(manifest[args[0]].help[util.language || 'en-US'])
+			if (!manifest) {
+				util.console.print('[FATAL]: Manifest DB is removed. Reload page')
+			} else if (!manifest[args[0]]) {
+				util.console.print('[Error]: Command does not exist or command manifest is invalid', util.theme.color.error);
+			} else if (!manifest[args[0]].help) {
+				util.console.print('[Error]: No help data given for this command. Ask it\'s developer xD', util.theme.color.error)
+			} else if (!manifest[args[0]].help[util.language || 'en-US']) {
+				util.console.print('[Error]: No help data given for your language', util.theme.color.error)
+			} else {
+				util.console.print(manifest[args[0]].help[util.language || 'en-US']);
+			}
 		}
 	} else {
 		
@@ -101,9 +115,10 @@ apps.help = function (args, redir) {
 		
 		for (var appid in manifest) {
 			
-			if (appid.length > largest) {largest = appid.length}
-			
-			help.push(appid + ' ' + manifest[appid].help[util.language || 'en-US']);
+			if (manifest && manifest[appid] && manifest[appid].help && manifest[appid].help[util.language || 'en-US']) {
+				if (appid.length > largest) {largest = appid.length}
+				help.push(appid + ' ' + manifest[appid].help[util.language || 'en-US']);
+			}
 		}
 		
 		if (redir) {
@@ -152,16 +167,30 @@ apps.usage = function (args, redir) {
 		}
 	}
 	
+	var appid = args[0];
+	
 	if (redir) {
-		return manifest[args[0]].usage[util.language || 'en-US'];
+		if (manifest && manifest[appid] && manifest[appid].usage) {
+			return manifest[appid].usage;
+		} else {
+			return false;
+		}
 	} else {
-		util.console.print(manifest[args[0]].usage[util.language || 'en-US']);
+		if (!manifest) {
+			util.console.print('[FATAL]: Manifest DB is removed. Reload page')
+		} else if (!manifest[appid]) {
+			util.console.print('[Error]: Command does not exist or command manifest is invalid', util.theme.color.error);
+		} else if (!manifest[appid].usage) {
+			util.console.print('[Error]: No usage data given for this command. Ask it\'s developer xD', util.theme.color.error)
+		} else {
+			util.console.print(manifest[args[0]].usage)
+		}
 	}
 }
 
 manifest.appbox = {
 	help: {
-		"en-US": "Load main commands package: echo, cd, pwd, var, help, apps, usage"
+		"en-US": "This command must be in autostart. It's already running"
 	},
 	async: false,
 	usage: "appbox"
@@ -185,7 +214,7 @@ manifest.cd = {
 
 manifest.var = {
 	help: {
-		"en-US": "Load main commands package: echo, cd, pwd, var, help, apps, usage"
+		"en-US": "Set value of variable"
 	},
 	async: false,
 	usage: "var name value \nOR var name=value\nOR var name = value"
