@@ -245,3 +245,9 @@ a {
 .cf {
   zoom:1;
 }
+
+#demo-frame {
+	width: 100%;
+	box-sizing: border-box;
+	border: solid 2px #8EB33B;
+}
