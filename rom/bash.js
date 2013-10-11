@@ -1,6 +1,37 @@
 var apps = {};
 var manifest = {};
 
+
+function runApp(name, redir, args, callback) {
+	if (!apps[name]) {
+		var sc = document.createElement('script');
+		sc.src = 'rom/'+name+'.js'
+		sc.onload = function () {
+			if (apps[name]) {
+				if (manifest[name] && manifest[name].async) {
+					apps[name](args, redir, callback);
+				} else {
+					callback(apps[name](args, redir));
+				}
+			} else {
+				util.console.print('[Ошибка]: Нет такого файла/приложения: "'+name+'"', util.theme.color.error);
+				callback(false);
+			}
+		}
+		sc.onerror = function () {
+			util.console.print('[Ошибка]: Нет такого файла/приложения: "'+name+'"', util.theme.color.error);
+			callback(false);
+		}
+		document.getElementsByTagName('head')[0].appendChild(sc);
+	} else {
+		if (manifest[name] && manifest[name].async) {
+			apps[name](args, redir, callback);
+		} else {
+			callback(apps[name](args, redir));
+		}
+	}
+}
+
 function bash(input) {
 	input = input || [];
 	if (input.indexOf('--file') !== -1) {
@@ -9,7 +40,7 @@ function bash(input) {
 		
 		var prompt;
 
-		switch (util.theme.promptStyle) {
+		switch (parseFloat(util.theme.promptStyle)) {
 			case 1:
 				// cloudx style;
 				
@@ -246,35 +277,17 @@ function bash(input) {
 			});
 			return a1;
 		}
-
-		function runApp(name, redir, args, callback) {
-			if (!apps[name]) {
-				var sc = document.createElement('script');
-				sc.src = 'rom/'+name+'.js'
-				sc.onload = function () {
-					if (apps[name]) {
-						if (manifest[name] && manifest[name].async) {
-							apps[name](args, redir, callback);
-						} else {
-							callback(apps[name](args, redir));
-						}
-					} else {
-						util.console.print('[Ошибка]: Нет такого файла/приложения: "'+name+'"', util.theme.color.error);
-						callback(false);
+		
+		function loadFsApp (name, callback) {
+			cx.API ({method:'fs.ls', path:util.tdata.pwd}, function (result) {
+				if (!result) {
+					callback (false);
+				} else {
+					if (result.indexOf (name+'.js') !== -1) {
+						cx.API ({method: 'fs.'}) 
 					}
 				}
-				sc.onerror = function () {
-					util.console.print('[Ошибка]: Нет такого файла/приложения: "'+name+'"', util.theme.color.error);
-					callback(false);
-				}
-				document.getElementsByTagName('head')[0].appendChild(sc);
-			} else {
-				if (manifest[name] && manifest[name].async) {
-					apps[name](args, redir, callback);
-				} else {
-					callback(apps[name](args, redir));
-				}
-			}
+			})
 		}
 		
 		var lastReturn;
@@ -333,7 +346,11 @@ function bash(input) {
 	}
 }
 
+manifest['bash'] = {
+	async: true
+}
+
 // post init
 
 apps.bash = bash;
-util.console.print('Cloudx shell; \n use "appbox" to load some utilites', util.theme.color.info);
+util.console.print('Welcome to JsTerm!', util.theme.color.info);

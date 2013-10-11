@@ -4,11 +4,42 @@ var util = {
 	
 	language: 'en-US',
 	
+	
 	fs: {
 		fileGetContents: function (path) {},
 		fileSetContents: function (path) {},
 		ls: function (path) {},
-		mkdir : function (path) {}
+		mkdir : function (path) {},
+		getRealPath: function (dir) {
+			dir = dir.split('/');
+			
+			if (dir[0] === '.') {
+				dir.splice(0,1,util.tdata.pwd);
+			} else if (dir[0] !== '') {
+				dir.splice(0,0,util.tdata.pwd)
+			}
+			
+			dir = dir.join('/').split('/');
+			
+			var ndir = [];
+			
+			dir.forEach(function (v,i) {
+				if (v === '..') {
+					ndir.pop();
+				} else if (v === '.') {
+					// do nothing
+				} else if (v === '') {
+					// do nothing
+				} else {
+					ndir.push(v);
+				}
+			});
+			
+			return  '/'+ndir.join('/');
+		},
+		getFileName: function (path) {
+			return path.split('/').pop();
+		}
 	},
 
 	cursor: {
