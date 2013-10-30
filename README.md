@@ -77,14 +77,14 @@ Use API's listed below to write your own console app for jsterm
   - <b>show</b> () - show cursor
 - util.theme
   - <b>promptStyle</b> - config. 1 means, that prompt is in cloudx style, 2 - ubuntu, 3 - fedora;
-  - color - colors. Please use this variables in your jsterm apps;
-    - <b>color.background</b> - default: #242424 (dark gray)
-    - <b>color.error</b> - default: #C75646 (light red) 
-    - <b>color.info</b> - default: #49D0FF (light blue)
-    - <b>color.prompt</b> - default: #8EB33B (green)
-    - <b>color.text</b> - default: #F7F7F7 (white/gray)
-    - <b>color.warning</b> - default: #FFB259 (orange)
-    - <b>color.textBackground</b> - default: transparent
+  - <b>color</b> - colors. Please use this variables in your jsterm apps;
+    - <b>background</b> - default: #242424 (dark gray)
+    - <b>error</b> - default: #C75646 (light red) 
+    - <b>info</b> - default: #49D0FF (light blue)
+    - <b>prompt</b> - default: #8EB33B (green)
+    - <b>text</b> - default: #F7F7F7 (white/gray)
+    - <b>warning</b> - default: #FFB259 (orange)
+    - <b>textBackground</b> - default: transparent
 - util.tdata
   - <b>pwd</b> - default: "/user/desktop" - working directory
   - <b>system</b> - default: "cloudx-3.3" - system
